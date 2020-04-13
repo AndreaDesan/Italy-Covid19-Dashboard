@@ -2,6 +2,8 @@
 
 Dashboard to visualise the data made available by the Italian government on the Covid-19 outbreak in real time.
 
+![Dashboard screenshot](screenshot.PNG)
+
 Data is taken from: [https://github.com/pcm-dpc/COVID-19](https://github.com/pcm-dpc/COVID-19)
 The data are updated every day around 6pm by the Italian Government. The dashboard checks for new data and updates itself automatically every 24 hours.
 
