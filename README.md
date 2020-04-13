@@ -14,3 +14,8 @@ The dashboard worked fine when I have tested it and provides a good deal of inte
 However I am a scientist and and engineer and I mostly use Pyhon (... and coding in general) to do calculations and some data viz! Hence, *my knowledge of CSS if very close to non-existent - and you can definitely tell that from my code!*
 
 There is room for improvement in terms of the appearance of the dashboard (to put it mildly...) - any improvements/suggestions with respect fo this or any other aspect are more than welcome. 
+
+I am using [https://www.openstreetmap.org/](Open Street Map) for the geo plots. If you have [https://www.mapbox.com/](Mapbox) token you can use it to replace Open Street Map by:
+1. Insert your Mapbox token in the commented line starting `token = 'instert_mapbox_token_here'` and uncomment the line
+2. Comment the line `mapbox_style="open-street-map"` in the two functions that are generating the Map plots
+3. Uncomment the line `accesstoken=token` in the two functions that are generating the Map plots
