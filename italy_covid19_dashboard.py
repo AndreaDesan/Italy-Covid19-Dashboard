@@ -22,7 +22,7 @@ url_geo = 'https://raw.githubusercontent.com/Dataninja/geo-shapes/master/italy/r
 geo_data = requests.get(url_geo).json()
 
 #mapbox token
-#token ='instert_mapbox_token_here'
+#token ='insert_mapbox_token_here'
 
 #url to national and regional raw data
 url_nation="https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv"
@@ -95,12 +95,28 @@ def clean_daily_regional_data(df):
 #instantiate dapp
 app=dash.Dash()
 
-#markdown header
-markdown_text = '''
-# Covid-19 outbreak in Italy
-Data taken from: https://github.com/pcm-dpc/COVID-19
+#markdown header and disclaimer
+header = '''
+# Covid-19 outbreak in Italy Dashboard (desktop only)
 
-Dashboard source code available at: https://github.com/AndreaDesan/Italy-Covid19-Dashboard
+Data source: https://github.com/pcm-dpc/COVID-19
+
+Dashboard source code: https://github.com/AndreaDesan/Italy-Covid19-Dashboard/
+'''
+
+discl = '''
+### Disclaimer
+The dashboard worked fine at the testing stage.  However it does not come with a 100% error-free guarantee. A detailed definition of each variable in the plots, in both Italian and English, can be found [here](https://github.com/pcm-dpc/COVID-19/blob/master/README.md).
+
+I strove to follow useful guidelines and recommendations from different sources (mainly [Ten Considerations Before You Create Another Chart About COVID-19]([https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8)) and [Is that COVID-19 data dashboard doing good? Or is it actually worse than nothing?](https://towardsdatascience.com/is-that-covid-19-data-dashboard-doing-good-or-is-it-actually-worse-than-nothing-de43da1c98be)) for developing a dashboard about such a sensitive topic in a proper and conscientious way.  However, **any improvement/suggestion is more than welcome**. 
+
+### Resources
+* Data is taken from [the official repository of the Italian Civil Protection Department](https://github.com/pcm-dpc/COVID-19).
+The data is updated every day around 5pm by the Italian Civil Protection Department. The dashboard checks for new data and updates itself automatically every 24 hours.
+
+* Geojson file for Italian regions taken from: [https://github.com/Dataninja/geo-shapes/tree/master/italy] (https://github.com/Dataninja/geo-shapes/tree/master/italy)
+
+* Data on the resident population in Italian regions from: [http://dati.istat.it/Index.aspx?DataSetCode=DCIS_POPRES1](http://dati.istat.it/Index.aspx?DataSetCode=DCIS_POPRES1)
 '''
 
 #create list of dictionaries for the x-axis of the national and regional timeseries scatterplot
@@ -116,7 +132,7 @@ log_axis_options=[
 
 #app layout
 app.layout = html.Div([
-    html.Div(dcc.Markdown(children=markdown_text),
+    html.Div(dcc.Markdown(children=header),
             style={"width":"100%","height":"150px","text-align":"center",'display': 'inline-block'}),
    
     html.H2(id="update-date",
@@ -155,12 +171,15 @@ app.layout = html.Div([
 
     html.Div(dcc.Graph(id="national-total-cases-density"),
              style={"position":"relative","left":"50%", "width":"45%",'display': 'inline-block'}),
+             
+    html.Div(dcc.Markdown(children=discl),
+            style={"padding-top":"25px","font-size":"small"}),
 
     dcc.Interval(
             id='interval-component',
             interval=24*3600*1000, # in milliseconds
             n_intervals=0)
-],style={"backgroundColor":"#D3D3D3","height":"1200px"})   
+],style={"backgroundColor":"#D3D3D3","height":"1400px"})   
 
 #update latest update text box
 @app.callback(Output('update-date', 'children'),
