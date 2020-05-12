@@ -31,12 +31,15 @@ url_regions="https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regi
 #functions to load and clean-up the data
 def get_national_data():
     df=pd.read_csv(url_nation)
-    df.drop(["stato","note_it","note_en"],axis=1,inplace=True)
+    df.drop(["stato","note_it","note_en","casi_testati"],axis=1,inplace=True)
     df.columns = ['Date', 'Hospitalized with symptoms', 'IC',
        'Total hospitalized', 'Quarantined at home',
        'Total positives', 'Total variation in positives','New current positives',
        'Recovered', 'Deaths', 'Total cases', 'Total tests']
     df['Date'] = df['Date'].apply(lambda x: x[:-9])
+    df['Positives/Tests Ratio'] = df['Total cases']/df['Total tests']
+    df['Case fatality rate (per total cases)']=df['Deaths']/df['Total cases']
+    df['Case fatality rate (per closed cases)']=df['Deaths']/(df['Deaths']+df['Recovered'])
     return df
 
 def get_national_data_latestday():
@@ -45,12 +48,15 @@ def get_national_data_latestday():
 
 def get_regional_data():
     df=pd.read_csv(url_regions)
-    df.drop(["stato","note_it","note_en"],axis=1,inplace=True)
+    df.drop(["stato","note_it","note_en","casi_testati"],axis=1,inplace=True)
     df.columns = ['Date', 'Region Id', 'Region', 'Lat', 'Long','Hospitalized with symptoms', 'IC',
        'Total hospitalized', 'Quarantined at home',
        'Total positives', 'Total variation in positives','New current positives',
        'Recovered', 'Deaths', 'Total cases', 'Total tests']
     df['Date'] = df['Date'].apply(lambda x: x[:-9])
+    df['Positives/Tests Ratio'] = df['Total cases']/df['Total tests']
+    df['Case fatality rate (per total cases)']=df['Deaths']/df['Total cases']
+    df['Case fatality rate (per closed cases)']=df['Deaths']/(df['Deaths']+df['Recovered'])
     return df
 
 def get_regional_data_latestday():
@@ -85,7 +91,13 @@ def clean_daily_regional_data(df):
         "Total cases": (df[df["Region"]=="P.A. Trento"]["Total cases"].to_numpy()[0]+
                                    df[df["Region"]=="P.A. Bolzano"]["Total cases"].to_numpy()[0]),
         "Total tests":(df[df["Region"]=="P.A. Trento"]["Total tests"].to_numpy()[0]+
-                                   df[df["Region"]=="P.A. Bolzano"]["Total tests"].to_numpy()[0])
+                                   df[df["Region"]=="P.A. Bolzano"]["Total tests"].to_numpy()[0]),
+        "Positives/Tests Ratio":(df[df["Region"]=="P.A. Trento"]["Positives/Tests Ratio"].to_numpy()[0]+
+                                   df[df["Region"]=="P.A. Bolzano"]["Positives/Tests Ratio"].to_numpy()[0]),
+        "Case fatality rate (per total cases)":(df[df["Region"]=="P.A. Trento"]["Case fatality rate (per total cases)"].to_numpy()[0]+
+                                   df[df["Region"]=="P.A. Bolzano"]["Case fatality rate (per total cases)"].to_numpy()[0]),
+        "Case fatality rate (per closed cases)":(df[df["Region"]=="P.A. Trento"]["Case fatality rate (per closed cases)"].to_numpy()[0]+
+                                   df[df["Region"]=="P.A. Bolzano"]["Case fatality rate (per closed cases)"].to_numpy()[0])
             },ignore_index=True)
     df=df[(df["Region"] != 'P.A. Trento') & (df["Region"] != 'P.A. Bolzano')]
     df.sort_values(by=["Region Id"],inplace=True)
@@ -109,6 +121,8 @@ discl = '''
 The dashboard worked fine at the testing stage.  However it does not come with a 100% error-free guarantee. A detailed definition of each variable in the plots, in both Italian and English, can be found [here](https://github.com/pcm-dpc/COVID-19/blob/master/README.md).
 
 I strove to follow useful guidelines and recommendations from different sources (mainly [Ten Considerations Before You Create Another Chart About COVID-19]([https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8)) and [Is that COVID-19 data dashboard doing good? Or is it actually worse than nothing?](https://towardsdatascience.com/is-that-covid-19-data-dashboard-doing-good-or-is-it-actually-worse-than-nothing-de43da1c98be)) for developing a dashboard about such a sensitive topic in a proper and conscientious way.  However, **any improvement/suggestion is more than welcome**. 
+
+Case fatality rates (per total cases and per closed cases) are calculated according to [this Lancet publication](https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30246-2/fulltext).
 
 ### Resources
 * Data is taken from [the official repository of the Italian Civil Protection Department](https://github.com/pcm-dpc/COVID-19).

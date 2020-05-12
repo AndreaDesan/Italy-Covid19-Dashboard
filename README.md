@@ -11,6 +11,8 @@ The dashboard worked fine when I have tested it and provides a good deal of inte
 
 I find the name of the variables self-explanatory; however, the definition of each variable, in both Italian and English, can be found [here](https://github.com/pcm-dpc/COVID-19/blob/master/README.md).
 
+Case fatality rates (per total cases and per closed cases) are calculated according to [this Lancet publication](https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30246-2/fulltext).
+
 I strove to follow useful guidelines and recommendations from different sources (mainly [Ten Considerations Before You Create Another Chart About COVID-19]([https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8](https://medium.com/nightingale/ten-considerations-before-you-create-another-chart-about-covid-19-27d3bd691be8)) and [Is that COVID-19 data dashboard doing good? Or is it actually worse than nothing?](https://towardsdatascience.com/is-that-covid-19-data-dashboard-doing-good-or-is-it-actually-worse-than-nothing-de43da1c98be)) for developing a dashboard about such a sensitive topic in a proper and conscientious way. 
 
 However, I am a scientist and and engineer and I mostly use Python (... and coding in general!) to do calculations and some data viz! Hence, *my knowledge of CSS is almost non-existent - and you can definitely tell that from my code!* . So there is room for improvement (to put it mildly) in terms of the appearance of the dashboard and **any improvements/suggestions with respect to this or any other aspect are more than welcome**. 
