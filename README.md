@@ -1,4 +1,4 @@
-# Italy-Covid19-Dashboard (desktop only)
+# Italy-Covid19-Dashboard
 
 Dashboard to visualise the data made available by the Italian Italian Civil Protection Department on the Covid-19 outbreak in real time.
 The dashboard is deployed and can be visualized [here](https://italy-covid19-dashboard.herokuapp.com/).
