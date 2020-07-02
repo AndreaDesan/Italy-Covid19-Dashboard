@@ -31,7 +31,7 @@ url_regions="https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regi
 #functions to load and clean-up the data
 def get_national_data():
     df=pd.read_csv(url_nation)
-    df.drop(["stato","note_it","note_en","casi_testati"],axis=1,inplace=True)
+    df.drop(["stato","note","casi_da_sospetto_diagnostico","casi_da_screening","casi_testati"],axis=1,inplace=True)
     df.columns = ['Date', 'Hospitalized with symptoms', 'IC',
        'Total hospitalized', 'Quarantined at home',
        'Total positives', 'Total variation in positives','New current positives',
@@ -48,7 +48,7 @@ def get_national_data_latestday():
 
 def get_regional_data():
     df=pd.read_csv(url_regions)
-    df.drop(["stato","note_it","note_en","casi_testati"],axis=1,inplace=True)
+    df.drop(["stato","note","casi_da_sospetto_diagnostico","casi_da_screening","casi_testati"],axis=1,inplace=True)
     df.columns = ['Date', 'Region Id', 'Region', 'Lat', 'Long','Hospitalized with symptoms', 'IC',
        'Total hospitalized', 'Quarantined at home',
        'Total positives', 'Total variation in positives','New current positives',
@@ -109,7 +109,7 @@ app=dash.Dash()
 
 #markdown header and disclaimer
 header = '''
-# Covid-19 outbreak in Italy Dashboard (desktop only)
+# Covid-19 outbreak in Italy Dashboard
 
 Data source: https://github.com/pcm-dpc/COVID-19
 
