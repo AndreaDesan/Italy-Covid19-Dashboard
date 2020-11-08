@@ -56,7 +56,7 @@ def get_regional_data():
     df['Date'] = df['Date'].apply(lambda x: x[:-9])
     df['Positives/Tests Ratio'] = df['Total cases']/df['Total tests']
     df['Case fatality rate (per total cases)']=df['Deaths']/df['Total cases']
-    df['Case fatality rate (per closed cases)']=df['Deaths']/(df['Deaths']+df['Recovered'])
+    df['Case fatality rate (per closed cases)']=df['Deaths']/(df['Deaths']+df['Recovered'])    
     return df
 
 def get_regional_data_latestday():
@@ -97,19 +97,22 @@ def clean_daily_regional_data(df):
         "Case fatality rate (per total cases)":(df[df["Region"]=="P.A. Trento"]["Case fatality rate (per total cases)"].to_numpy()[0]+
                                    df[df["Region"]=="P.A. Bolzano"]["Case fatality rate (per total cases)"].to_numpy()[0]),
         "Case fatality rate (per closed cases)":(df[df["Region"]=="P.A. Trento"]["Case fatality rate (per closed cases)"].to_numpy()[0]+
-                                   df[df["Region"]=="P.A. Bolzano"]["Case fatality rate (per closed cases)"].to_numpy()[0])
+                                   df[df["Region"]=="P.A. Bolzano"]["Case fatality rate (per closed cases)"].to_numpy()[0])  
             },ignore_index=True)
     df=df[(df["Region"] != 'P.A. Trento') & (df["Region"] != 'P.A. Bolzano')]
     df.sort_values(by=["Region Id"],inplace=True)
     df.index = [i for i in range(0,20)]
     return df
 
+#load external css
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 #instantiate dapp
-app=dash.Dash()
+app=dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 #markdown header and disclaimer
 header = '''
-# Covid-19 outbreak in Italy Dashboard
+# Covid-19 outbreak in Italy
 
 Data source: https://github.com/pcm-dpc/COVID-19
 
@@ -142,7 +145,6 @@ log_axis_options=[
     {"label":"linear y axis","value":"linear"},
     {"label":"log y axis","value":"log"}
 ]
-
 
 #app layout
 app.layout = html.Div([
@@ -185,7 +187,7 @@ app.layout = html.Div([
 
     html.Div(dcc.Graph(id="national-total-cases-density"),
              style={"position":"relative","left":"50%", "width":"45%",'display': 'inline-block'}),
-             
+    
     html.Div(dcc.Markdown(children=discl),
             style={"padding-top":"25px","font-size":"small"}),
 
@@ -193,7 +195,7 @@ app.layout = html.Div([
             id='interval-component',
             interval=24*3600*1000, # in milliseconds
             n_intervals=0)
-],style={"backgroundColor":"#D3D3D3","height":"1400px"})   
+],style={"backgroundColor":"#D3D3D3","height":"fit-content"})     
 
 #update latest update text box
 @app.callback(Output('update-date', 'children'),
@@ -268,7 +270,7 @@ def update_national_total_cases(n):
                          mode="markers",
                          customdata=df["Total cases"],
                          marker=dict(
-                         size=df["Total cases"]/500
+                         size=df["Total cases"]/2000
                                      ),
                          text = df['Region'],
                         hovertemplate = '<b>Region</b>: <b>%{text}</b>'+
@@ -302,7 +304,7 @@ def update_national_total_cases_density(n):
         'data': [go.Choroplethmapbox(geojson=geo_data, 
                                     featureidkey="properties.COD_REG", 
                                     locations=df["Region Id"],
-                                    z=df["Total cases"]/df_pop_reg["Population"]*10000,
+                                    z=df["Total cases"]/df_pop_reg["Population"]*2000,
                                     text = df['Region'],
                                     hovertemplate = '<b>Region</b>: <b>%{text}</b>'+
                                             '<br><b> Total cases per 10k inhabitants </b>: %{z}<br><extra></extra>',
