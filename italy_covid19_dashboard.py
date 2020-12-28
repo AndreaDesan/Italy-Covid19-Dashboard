@@ -9,6 +9,7 @@ import dash
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import dash_html_components as html
+import dash_daq as daq
 import requests
 
 import plotly.graph_objects as go
@@ -156,6 +157,31 @@ app.layout = html.Div([
     html.H2(id="update-date",
              style={"position":"absolute","left":"5%","top":"7%","width":"20%", 'display': 'inline-block'}),
 
+
+    html.Div([html.Div(daq.LEDDisplay(
+                        id='display-newCases',
+                        label={"label":"Daily new cases","style":{"font-size":30,"color":"#1f77b4"}},
+                        color="#1f77b4",
+                        backgroundColor="#FF000000",
+                        value=0),
+                       style={"position":"relative","left":"3%","width":"30%","text-align":"center",'display': 'inline-block'}),
+             html.Div(daq.LEDDisplay(
+                        id='display-newDeaths',
+                        label={"label":"Daily deaths","style":{"font-size":30,"color":"#ff7f0e"}},
+                        color="#ff7f0e",
+                        backgroundColor="#FF000000",
+                        value=0),
+                     style={"position":"relative","left":"3%","width":"30%","text-align":"center",'display': 'inline-block'}),
+              html.Div(daq.LEDDisplay(
+                        id='display-newTests',
+                        label={"label":"Daily tests","style":{"font-size":30,"color":"#000000"}},
+                        color="#000000",
+                        backgroundColor="#FF000000",
+                        value=0),
+                     style={"position":"relative","left":"3%","width":"30%","text-align":"center",'display': 'inline-block'})
+             ],
+            style={"padding-top":50,"padding-bottom":50}),
+
     html.Div([
     html.Div(dcc.Graph(id="national-timeseries")),
     html.Div(dcc.RadioItems(id='axis-type-national',
@@ -205,6 +231,27 @@ app.layout = html.Div([
 def update_date(n):
       df = get_national_data()
       return "Latest update:\n" + df["Date"].max()
+
+@app.callback(Output('display-newCases', 'value'),
+              [Input('interval-component', 'n_intervals')])
+def update_ledp_display(n):
+    df=get_national_data()
+    dflen=len(df)-1
+    return df["New current positives"][dflen]
+
+@app.callback(Output('display-newDeaths', 'value'),
+              [Input('interval-component', 'n_intervals')])
+def update_ledp_display(n):
+    df=get_national_data()
+    dflen=len(df)-1
+    return (df["Deaths"][dflen]-df["Deaths"][dflen-1])
+
+@app.callback(Output('display-newTests', 'value'),
+              [Input('interval-component', 'n_intervals')])
+def update_ledp_display(n):
+    df=get_national_data()
+    dflen=len(df)-1
+    return (df["Total tests"][dflen]-df["Total tests"][dflen-1])
 
 #update national timeseries
 @app.callback(Output('national-timeseries', 'figure'),
