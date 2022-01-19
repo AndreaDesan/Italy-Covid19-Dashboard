@@ -320,13 +320,14 @@ def update_regional_timeseries(n,selected_value,axis_type,region):
               [Input('interval-component','n_intervals')])
 def update_national_total_cases(n):
     df=clean_daily_regional_data(get_regional_data_latestday())
+    scale = int(df["Total cases"].sum()/800)
     return {
         'data': [go.Scattermapbox(lat=df["Lat"],
                          lon=df["Long"], 
                          mode="markers",
                          customdata=df["Total cases"],
                          marker=dict(
-                         size=df["Total cases"]/6000
+                         size=df["Total cases"]/scale
                                      ),
                          text = df['Region'],
                         hovertemplate = '<b>Region</b>: <b>%{text}</b>'+
